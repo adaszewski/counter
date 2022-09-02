@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './Counter.css';
 
 import Display from './Display';
 import ButtonsPanel from './ButtonsPanel';
+import Step from './Step';
 // import Clock from './Clock';
 import ClockFunctional from './ClockFunctional';
 
@@ -13,29 +14,39 @@ class Counter extends Component {
 
         this.state = {
             counterValue: this.props.initValue,
+            stepValue: 1, 
             showClock: true,
+        
         };
 
         // binding needed when this.changeValue is a ES5 method
         // this.changeValue = this.changeValue.bind(this);
     }
 
+    changeStep = (step) => {
+        console.log(step)
+
+        this.setState({stepValue: +step})
+        
+    }
+    
     //changeValue() { // ES5 method (no this context by default)
+   
     changeValue = (action) => { // ES6 method
 
         this.setState((prevState, prevProps) => {
-            
-            let currentCounterValue = prevState.counterValue;
 
+            let currentCounterValue = prevState.counterValue;
+                        
             if (action === 'add') {
-                currentCounterValue += 1;
+                currentCounterValue += this.state.stepValue;
             } else if (action === 'reinit') {
                 currentCounterValue = prevProps.initValue;
             } else {
                 currentCounterValue = 0;
             }
 
-            return({
+            return ({
                 counterValue: currentCounterValue
             });
         });
@@ -43,7 +54,7 @@ class Counter extends Component {
 
     toggleClock = () => {
         this.setState((prevState) => {
-            return({
+            return ({
                 showClock: !prevState.showClock
             });
         })
@@ -64,7 +75,8 @@ class Counter extends Component {
             <div className="counter">
                 Counter:
                 <Display displayValue={this.state.counterValue} />
-                <ButtonsPanel buttonMethod={this.changeValue} />
+                <ButtonsPanel buttonMethod={this.changeValue} stepValue={this.state.stepValue} />
+                <Step stepMethod={this.changeStep} />
                 {clockElement}
             </div>
         );
